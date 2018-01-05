@@ -1,5 +1,9 @@
 package twofa
 
+import (
+	"encoding/binary"
+)
+
 const (
 	// DefaultStepTime as per RFC 6238 is 30 seconds
 	DefaultStepTime int = 30
@@ -24,8 +28,8 @@ type Account struct {
 }
 
 // NewAccount returns a new 2fa account with default values
-func NewAccount(name, label, key string) *Account {
-	return &Account{
+func NewAccount(name, label, key string) Account {
+	return Account{
 		Name:     name,
 		Label:    label,
 		T0:       DefaultT0,
@@ -33,4 +37,12 @@ func NewAccount(name, label, key string) *Account {
 		Digits:   DefaultDigits,
 		Key:      key,
 	}
+}
+
+// getMessage constructs the message for HMAC with given params
+func getMessage(t1 int64, t0, stepTime int) (message []byte) {
+	step := (t1 - int64(t0)) / int64(stepTime)
+	message = make([]byte, 8)
+	binary.BigEndian.PutUint64(message, uint64(step))
+	return message
 }
