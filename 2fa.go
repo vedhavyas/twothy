@@ -46,3 +46,9 @@ func getMessage(t1 int64, t0, stepTime int) (message []byte) {
 	binary.BigEndian.PutUint64(message, uint64(step))
 	return message
 }
+
+// getOffset returns the offset from hash bytes as per https://tools.ietf.org/html/rfc4226#section-5.4
+func getOffset(hash []byte) int {
+	lastByte := hash[len(hash)-1]
+	return int(lastByte & 0xf)
+}

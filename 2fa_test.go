@@ -48,3 +48,32 @@ func Test_getMessage(t *testing.T) {
 		}
 	}
 }
+
+func Test_getOffset(t *testing.T) {
+	tests := []struct {
+		bytes  []byte
+		result int
+	}{
+		{
+			bytes:  []byte{0x5a},
+			result: 10,
+		},
+
+		{
+			bytes:  []byte{0x12, 0x12},
+			result: 2,
+		},
+
+		{
+			bytes:  []byte{0xaf},
+			result: 15,
+		},
+	}
+
+	for _, c := range tests {
+		r := getOffset(c.bytes)
+		if r != c.result {
+			t.Fatalf("Expected %d but got %d", c.result, r)
+		}
+	}
+}
