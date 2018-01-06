@@ -1,4 +1,4 @@
-package twofa
+package twothy
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 )
 
 // configName for the configFile
-const configName string = ".2fa.json"
+const configName string = ".twothy.json"
 
 // Config holds the path of the accounts
 type Config struct {
