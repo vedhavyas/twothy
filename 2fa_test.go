@@ -116,3 +116,36 @@ func Test_pow(t *testing.T) {
 		}
 	}
 }
+
+func TestCreateOTP(t *testing.T) {
+	tests := []struct {
+		key  string
+		time int64
+		otp  int32
+	}{
+		{
+			key:  "NBSWY3DPFQQHO33SNRSCC===",
+			time: 1515234073,
+			otp:  201214,
+		},
+
+		{
+			key:  "NBSWY3DPFQQHO33SNRSCC===",
+			time: 1515234317,
+			otp:  214658,
+		},
+	}
+
+	a := NewAccount("Test", "account", "")
+	for _, c := range tests {
+		a.Key = c.key
+		otp, err := CreateOTP(a, c.time)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if c.otp != otp {
+			t.Fatalf("expected %d but got %d", c.otp, otp)
+		}
+	}
+}

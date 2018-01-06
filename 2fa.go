@@ -6,7 +6,6 @@ import (
 	"encoding/base32"
 	"encoding/binary"
 	"fmt"
-	"time"
 )
 
 const (
@@ -77,8 +76,8 @@ func pow(x, y int) int {
 }
 
 // CreateOTP creates opt for account at given time
-func CreateOTP(a Account, t time.Time) (otp int32, err error) {
-	m := getMessage(t.Unix(), a.T0, a.StepTime)
+func CreateOTP(a Account, time int64) (otp int32, err error) {
+	m := getMessage(time, a.T0, a.StepTime)
 
 	key, err := base32.StdEncoding.DecodeString(a.Key)
 	if err != nil {
