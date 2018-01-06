@@ -12,7 +12,7 @@ import (
 )
 
 // configName for the configFile
-const configName string = ".twothy.json"
+const configName = ".twothy.json"
 
 // Config holds the path of the accounts
 type Config struct {
