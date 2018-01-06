@@ -77,3 +77,42 @@ func Test_getOffset(t *testing.T) {
 		}
 	}
 }
+
+func Test_pow(t *testing.T) {
+	tests := []struct {
+		x int
+		y int
+		r int
+	}{
+		{
+			x: 0,
+			y: 100,
+			r: 0,
+		},
+
+		{
+			x: 100,
+			y: 0,
+			r: 1,
+		},
+
+		{
+			x: 2,
+			y: 1,
+			r: 2,
+		},
+
+		{
+			x: 10,
+			y: 6,
+			r: 1000000,
+		},
+	}
+
+	for _, c := range tests {
+		r := pow(c.x, c.y)
+		if c.r != r {
+			t.Fatalf("expected %d but got %d", c.r, r)
+		}
+	}
+}

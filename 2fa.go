@@ -1,7 +1,12 @@
 package twofa
 
 import (
+	"crypto/hmac"
+	"crypto/sha1"
+	"encoding/base32"
 	"encoding/binary"
+	"fmt"
+	"time"
 )
 
 const (
@@ -51,4 +56,47 @@ func getMessage(t1 int64, t0, stepTime int) (message []byte) {
 func getOffset(hash []byte) int {
 	lastByte := hash[len(hash)-1]
 	return int(lastByte & 0xf)
+}
+
+// pow returns x^y
+func pow(x, y int) int {
+	if x == 0 || x == 1 {
+		return x
+	}
+
+	if y == 0 {
+		return 1
+	}
+
+	r := 1
+	for i := 0; i < y; i++ {
+		r *= x
+	}
+
+	return r
+}
+
+// CreateOTP creates opt for account at given time
+func CreateOTP(a Account, t time.Time) (otp int32, err error) {
+	m := getMessage(t.Unix(), a.T0, a.StepTime)
+
+	key, err := base32.StdEncoding.DecodeString(a.Key)
+	if err != nil {
+		return otp, fmt.Errorf("invalid key: %v", err)
+	}
+
+	hasher := hmac.New(sha1.New, key)
+	_, err = hasher.Write(m)
+	if err != nil {
+		return otp, fmt.Errorf("failed create hash: %v", err)
+	}
+
+	h := hasher.Sum(nil)
+	ofs := getOffset(h)
+	r := int32(h[ofs]&0x7f)<<24 |
+		int32(h[ofs+1])<<16 |
+		int32(h[ofs+2])<<8 |
+		int32(h[ofs+3])
+
+	return r % int32(pow(10, a.Digits)), nil
 }
