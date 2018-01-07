@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -171,5 +172,62 @@ func Test_loadAccount(t *testing.T) {
 	a1 := NewAccount("test", "one", "keydata")
 	if !reflect.DeepEqual(a, a1) {
 		t.Fatalf("accounts mismatched")
+	}
+}
+
+func Test_loadAccounts(t *testing.T) {
+	tests := []struct {
+		name           string
+		label          string
+		resultAccounts int
+	}{
+		{
+			name:           "test",
+			label:          "one",
+			resultAccounts: 1,
+		},
+
+		{
+			name:           "test",
+			resultAccounts: 2,
+		},
+
+		{
+			name:           "Google",
+			label:          "ved",
+			resultAccounts: 1,
+		},
+
+		{
+			name:           "Google",
+			label:          "",
+			resultAccounts: 2,
+		},
+
+		{
+			resultAccounts: 4,
+		},
+	}
+
+	config := Config{AccountsFolder: "./test_folder/"}
+	for _, c := range tests {
+		accounts, err := loadAccounts(config, c.name, c.label)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		for _, a := range accounts {
+			if c.name != "" && strings.ToLower(c.name) != strings.ToLower(a.Name) {
+				t.Fatalf("acount name mismatch: %s != %s", c.name, a.Name)
+			}
+
+			if c.label != "" && strings.ToLower(c.label) != strings.ToLower(a.Label) {
+				t.Fatalf("acount label mismatch: %s != %s", c.label, a.Label)
+			}
+		}
+
+		if len(accounts) != c.resultAccounts {
+			t.Fatalf("expected %d accounts got %d", c.resultAccounts, len(accounts))
+		}
 	}
 }

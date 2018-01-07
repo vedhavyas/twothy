@@ -8,6 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 const (
@@ -127,4 +130,41 @@ func loadAccount(filePath string) (a Account, err error) {
 	}
 
 	return a, nil
+}
+
+// loadAccounts will a load accounts matching name and label
+// if label is empty, loads all the accounts matching name
+// if name and label are empty, all th accounts are returned
+func loadAccounts(c Config, name, label string) (accounts []Account, err error) {
+	if name != "" && label != "" {
+		path := fmt.Sprintf("%s%s_%s.twothy", c.AccountsFolder, name, label)
+		a, err := loadAccount(path)
+		return []Account{a}, err
+	}
+
+	err = filepath.Walk(c.AccountsFolder, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+
+		if filepath.Ext(path) == ".twothy" {
+			a, err := loadAccount(path)
+			if err != nil {
+				return fmt.Errorf("failed to read account in %s: %v", path, err)
+			}
+
+			if name != "" && strings.ToLower(name) != strings.ToLower(a.Name) {
+				return nil
+			}
+
+			accounts = append(accounts, a)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return accounts, fmt.Errorf("failed to load accounts: %v", err)
+	}
+
+	return accounts, nil
 }
