@@ -48,8 +48,6 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 		return fmt.Sprintf("%s@%s: %d\n", a.Label, a.Name, otp), nil
 
 	case "otp":
-		fallthrough
-	default:
 		c, err := GetConfig()
 		if err != nil {
 			return result, fmt.Errorf("failed to configure twothy: %v", err)
@@ -80,5 +78,8 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 		}
 
 		return b.String(), nil
+
+	default:
+		return result, fmt.Errorf("%s: unknown command", cmd)
 	}
 }
