@@ -5,7 +5,9 @@ import (
 	"crypto/sha1"
 	"encoding/base32"
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 )
 
 const (
@@ -100,8 +102,8 @@ func CreateOTP(a Account, time int64) (otp int32, err error) {
 	return r % int32(pow(10, a.Digits)), nil
 }
 
-// AddAccount writes account info to twothy folder
-func AddAccount(c Config, a Account) error {
+// saveAccount writes account info to twothy folder
+func saveAccount(c Config, a Account) error {
 	fileName := fmt.Sprintf("%s_%s.twothy", a.Name, a.Label)
 	path := fmt.Sprintf("%s%s", c.AccountsFolder, fileName)
 	err := writeToFile(path, a)
@@ -110,4 +112,19 @@ func AddAccount(c Config, a Account) error {
 	}
 
 	return nil
+}
+
+// loadAccount will load the account from file
+func loadAccount(filePath string) (a Account, err error) {
+	data, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return a, fmt.Errorf("failed to read file %s: %v", filePath, err)
+	}
+
+	err = json.Unmarshal(data, &a)
+	if err != nil {
+		return a, fmt.Errorf("failed to load file %s: %v", filePath, err)
+	}
+
+	return a, nil
 }

@@ -3,6 +3,7 @@ package twothy
 import (
 	"bytes"
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -151,12 +152,24 @@ func TestCreateOTP(t *testing.T) {
 	}
 }
 
-func TestAddAccount(t *testing.T) {
+func Test_saveAccount(t *testing.T) {
 	a := NewAccount("test", "one", "keydata")
 	c := Config{AccountsFolder: "./test_folder/"}
 	os.MkdirAll("test_folder", 0766)
-	err := AddAccount(c, a)
+	err := saveAccount(c, a)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func Test_loadAccount(t *testing.T) {
+	a, err := loadAccount("./test_folder/test_one.twothy")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	a1 := NewAccount("test", "one", "keydata")
+	if !reflect.DeepEqual(a, a1) {
+		t.Fatalf("accounts mismatched")
 	}
 }
