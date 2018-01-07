@@ -105,8 +105,8 @@ func CreateOTP(a Account, time int64) (otp int32, err error) {
 	return r % int32(pow(10, a.Digits)), nil
 }
 
-// saveAccount writes account info to twothy folder
-func saveAccount(c Config, a Account) error {
+// SaveAccount writes account info to twothy folder
+func SaveAccount(c Config, a Account) error {
 	fileName := fmt.Sprintf("%s_%s.twothy", a.Name, a.Label)
 	path := fmt.Sprintf("%s%s", c.AccountsFolder, fileName)
 	err := writeToFile(path, a)
@@ -132,10 +132,10 @@ func loadAccount(filePath string) (a Account, err error) {
 	return a, nil
 }
 
-// loadAccounts will a load accounts matching name and label
+// LoadAccounts will a load accounts matching name and label
 // if label is empty, loads all the accounts matching name
 // if name and label are empty, all th accounts are returned
-func loadAccounts(c Config, name, label string) (accounts []Account, err error) {
+func LoadAccounts(c Config, name, label string) (accounts []Account, err error) {
 	if name != "" && label != "" {
 		path := fmt.Sprintf("%s%s_%s.twothy", c.AccountsFolder, name, label)
 		a, err := loadAccount(path)

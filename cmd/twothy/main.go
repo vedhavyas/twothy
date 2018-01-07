@@ -2,16 +2,25 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/vedhavyas/twothy"
 )
 
 func main() {
-	config, err := twothy.GetConfig()
-	if err != nil {
-		log.Fatal(err)
+	args := os.Args[1:]
+	if len(args) < 1 {
+		//TODOs
+		os.Exit(1)
 	}
 
-	fmt.Println(config.AccountsFolder)
+	cmd := args[0]
+	result, err := twothy.ExecOp(cmd, args[1:]...)
+	if err != nil {
+		fmt.Printf("%s: failed due to: %v\n", cmd, err)
+		os.Exit(1)
+		return
+	}
+
+	fmt.Print(result)
 }

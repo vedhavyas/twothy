@@ -153,11 +153,11 @@ func TestCreateOTP(t *testing.T) {
 	}
 }
 
-func Test_saveAccount(t *testing.T) {
+func TestSaveAccount(t *testing.T) {
 	a := NewAccount("test", "one", "keydata")
 	c := Config{AccountsFolder: "./test_folder/"}
 	os.MkdirAll("test_folder", 0766)
-	err := saveAccount(c, a)
+	err := SaveAccount(c, a)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -175,7 +175,7 @@ func Test_loadAccount(t *testing.T) {
 	}
 }
 
-func Test_loadAccounts(t *testing.T) {
+func TestLoadAccounts(t *testing.T) {
 	tests := []struct {
 		name           string
 		label          string
@@ -211,7 +211,7 @@ func Test_loadAccounts(t *testing.T) {
 
 	config := Config{AccountsFolder: "./test_folder/"}
 	for _, c := range tests {
-		accounts, err := loadAccounts(config, c.name, c.label)
+		accounts, err := LoadAccounts(config, c.name, c.label)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

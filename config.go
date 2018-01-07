@@ -40,8 +40,8 @@ func loadConfig(filePath string) (c Config, err error) {
 	return c, nil
 }
 
-// configure configures twothy
-func configure(homeDir string) (config Config, err error) {
+// Configure configures twothy
+func Configure(homeDir string) (config Config, err error) {
 	fmt.Println("Welcome to twothy!!")
 	fmt.Println("Enter the path to store your 2FA accounts.")
 	fmt.Printf("I will create '%s' folder inside the given folder.\n", accountsFolder)
@@ -93,9 +93,9 @@ func GetConfig() (config Config, err error) {
 		return config, nil
 	}
 
-	config, err = configure(hd)
+	config, err = Configure(hd)
 	if err != nil {
-		return config, fmt.Errorf("failed to configure twothy: %v", err)
+		return config, fmt.Errorf("failed to Configure twothy: %v", err)
 	}
 
 	return config, nil
