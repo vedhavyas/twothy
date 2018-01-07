@@ -10,10 +10,10 @@ import (
 
 const (
 	// DefaultStepTime as per RFC 6238 is 30 seconds
-	DefaultStepTime int = 30
+	DefaultStepTime = 30
 
 	// DefaultT0 as per RFC 6238 is 0
-	DefaultT0 int = 0
+	DefaultT0 = 0
 
 	// DefaultDigits as per RFC 6238 is 6 digits
 	DefaultDigits = 6
@@ -98,4 +98,16 @@ func CreateOTP(a Account, time int64) (otp int32, err error) {
 		int32(h[ofs+3])
 
 	return r % int32(pow(10, a.Digits)), nil
+}
+
+// AddAccount writes account info to twothy folder
+func AddAccount(c Config, a Account) error {
+	fileName := fmt.Sprintf("%s_%s.twothy", a.Name, a.Label)
+	path := fmt.Sprintf("%s%s", c.AccountsFolder, fileName)
+	err := writeToFile(path, a)
+	if err != nil {
+		return fmt.Errorf("failed to save account: %v", err)
+	}
+
+	return nil
 }

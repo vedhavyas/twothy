@@ -11,8 +11,13 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-// configName for the configFile
-const configName = ".twothy.json"
+const (
+	// configName for the configFile
+	configName = ".twothy.json"
+
+	// accountsFilename for accounts
+	accountsFolder = "twothy_accounts"
+)
 
 // Config holds the path of the accounts
 type Config struct {
@@ -39,8 +44,8 @@ func loadConfig(filePath string) (c Config, err error) {
 func configure(homeDir string) (config Config, err error) {
 	fmt.Println("Welcome to twothy!!")
 	fmt.Println("Enter the path to store your 2FA accounts.")
-	fmt.Println("I will create 'twothy_accounts' folder inside the given folder.")
-	fmt.Println("If you are restoring accounts, provide root path to 'twothy_accounts'.")
+	fmt.Printf("I will create '%s' folder inside the given folder.\n", accountsFolder)
+	fmt.Printf("If you are restoring accounts, provide path to '%s'.\n", accountsFolder)
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Printf("Path(%s):", homeDir)
@@ -49,9 +54,24 @@ func configure(homeDir string) (config Config, err error) {
 		return config, fmt.Errorf("failed to scan user choice: %v", err)
 	}
 
-	if strings.TrimSpace(dir) == "" {
+	dir = strings.TrimSpace(dir)
+	if dir == "" {
 		dir = homeDir
 	}
+
+	if !strings.HasSuffix(dir, "/") {
+		dir = dir + "/"
+	}
+
+	if !strings.HasSuffix(dir, accountsFolder+"/") {
+		dir = dir + accountsFolder + "/"
+	}
+
+	err = os.MkdirAll(dir, 0766)
+	if err != nil {
+		return config, fmt.Errorf("failed to create %s: %v", dir, err)
+	}
+
 	config.AccountsFolder = dir
 	err = writeToFile(fmt.Sprintf("%s/%s", homeDir, configName), config)
 	if err != nil {

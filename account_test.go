@@ -2,6 +2,7 @@ package twothy
 
 import (
 	"bytes"
+	"os"
 	"testing"
 )
 
@@ -147,5 +148,15 @@ func TestCreateOTP(t *testing.T) {
 		if c.otp != otp {
 			t.Fatalf("expected %d but got %d", c.otp, otp)
 		}
+	}
+}
+
+func TestAddAccount(t *testing.T) {
+	a := NewAccount("test", "one", "keydata")
+	c := Config{AccountsFolder: "./test_folder/"}
+	os.MkdirAll("test_folder", 0766)
+	err := AddAccount(c, a)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
 	}
 }
