@@ -38,6 +38,9 @@ type Account struct {
 
 // NewAccount returns a new 2fa account with default values
 func NewAccount(name, label, key string) Account {
+	key = strings.Replace(key, "-", "", -1)
+	key = strings.Replace(key, " ", "", -1)
+	key = strings.ToUpper(key)
 	return Account{
 		Name:     name,
 		Label:    label,
