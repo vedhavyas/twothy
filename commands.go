@@ -35,7 +35,7 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 		}
 
 		a := NewAccount(args[0], args[1], args[2])
-		pwd, err := getPassword()
+		pwd, err := getPassword("to encrypt the account")
 		if err != nil {
 			return result, fmt.Errorf("failed to get password from user: %v", err)
 		}
@@ -50,7 +50,7 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 			return result, fmt.Errorf("failed to generate otp for account %s@%s: %v", a.Name, a.Label, err)
 		}
 
-		return fmt.Sprintf("%s@%s: %d\n", a.Label, a.Name, otp), nil
+		return fmt.Sprintf("%s@%s: %s\n", a.Label, a.Name, otp), nil
 
 	case "otp":
 		c, err := GetConfig()
@@ -67,7 +67,7 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 			label = args[1]
 		}
 
-		pwd, err := getPassword()
+		pwd, err := getPassword("to decrypt the account")
 		if err != nil {
 			return result, fmt.Errorf("failed to get password from user: %v", err)
 		}
@@ -84,7 +84,7 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 				return result, fmt.Errorf("failed to generate otp for account %s@%s: %v", a.Name, a.Label, err)
 			}
 
-			b.WriteString(fmt.Sprintf("%s@%s: %d\n", a.Label, a.Name, otp))
+			b.WriteString(fmt.Sprintf("%s@%s: %s\n", a.Label, a.Name, otp))
 		}
 
 		return b.String(), nil

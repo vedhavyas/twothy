@@ -84,7 +84,7 @@ func pow(x, y int) int {
 }
 
 // CreateOTP creates opt for account at given time
-func CreateOTP(a Account, time int64) (otp int32, err error) {
+func CreateOTP(a Account, time int64) (otp string, err error) {
 	m := getMessage(time, a.T0, a.StepTime)
 
 	key, err := base32.StdEncoding.DecodeString(a.Key)
@@ -105,7 +105,13 @@ func CreateOTP(a Account, time int64) (otp int32, err error) {
 		int32(h[ofs+2])<<8 |
 		int32(h[ofs+3])
 
-	return r % int32(pow(10, a.Digits)), nil
+	otp = fmt.Sprint(r % int32(pow(10, a.Digits)))
+	if len(otp) != a.Digits {
+		rpt := strings.Repeat("0", a.Digits-len(otp))
+		otp = rpt + otp
+	}
+
+	return otp, nil
 }
 
 // SaveAccount writes account info to twothy folder

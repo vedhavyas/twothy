@@ -16,8 +16,8 @@ import (
 const passwordPad = byte('=')
 
 // getPassword returns the password taken from the user
-func getPassword() ([]byte, error) {
-	fmt.Print("Password: ")
+func getPassword(hint string) ([]byte, error) {
+	fmt.Printf("Password(%s): ", hint)
 	password, err := terminal.ReadPassword(0)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read user's password: %v", err)

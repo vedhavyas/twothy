@@ -124,18 +124,18 @@ func TestCreateOTP(t *testing.T) {
 	tests := []struct {
 		key  string
 		time int64
-		otp  int32
+		otp  string
 	}{
 		{
 			key:  "NBSWY3DPFQQHO33SNRSCC===",
 			time: 1515234073,
-			otp:  201214,
+			otp:  "201214",
 		},
 
 		{
 			key:  "NBSWY3DPFQQHO33SNRSCC===",
 			time: 1515234317,
-			otp:  214658,
+			otp:  "214658",
 		},
 	}
 
