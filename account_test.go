@@ -154,22 +154,55 @@ func TestCreateOTP(t *testing.T) {
 }
 
 func TestSaveAccount(t *testing.T) {
-	a := NewAccount("test", "one", "keydata")
-	c := Config{AccountsFolder: "./test_folder/"}
-	os.MkdirAll("test_folder", 0766)
-	err := SaveAccount(c, a)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		name  string
+		label string
+		key   string
+	}{
+		{
+			name:  "test",
+			label: "one",
+			key:   "some key",
+		},
+
+		{
+			name: "test",
+			key:  "some key",
+		},
+
+		{
+			name:  "google",
+			label: "dev",
+			key:   "some key",
+		},
+
+		{
+			name: "google",
+			key:  "some key",
+		},
 	}
+
+	password := addPadding([]byte("password"), 8)
+	for _, c := range tests {
+		a := NewAccount(c.name, c.label, c.key)
+		c := Config{AccountsFolder: "./test_folder/"}
+		os.MkdirAll("test_folder", 0766)
+		err := SaveAccount(c, a, password)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+	}
+
 }
 
 func Test_loadAccount(t *testing.T) {
-	a, err := loadAccount("./test_folder/test_one.twothy")
+	password := addPadding([]byte("password"), 8)
+	a, err := loadAccount("./test_folder/test_one.twothy", password)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	a1 := NewAccount("test", "one", "keydata")
+	a1 := NewAccount("test", "one", "SOME KEY")
 	if !reflect.DeepEqual(a, a1) {
 		t.Fatalf("accounts mismatched")
 	}
@@ -194,7 +227,7 @@ func TestLoadAccounts(t *testing.T) {
 
 		{
 			name:           "Google",
-			label:          "ved",
+			label:          "dev",
 			resultAccounts: 1,
 		},
 
@@ -210,8 +243,9 @@ func TestLoadAccounts(t *testing.T) {
 	}
 
 	config := Config{AccountsFolder: "./test_folder/"}
+	password := addPadding([]byte("password"), 8)
 	for _, c := range tests {
-		accounts, err := LoadAccounts(config, c.name, c.label)
+		accounts, err := LoadAccounts(config, c.name, c.label, password)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

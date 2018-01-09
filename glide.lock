@@ -1,6 +1,15 @@
-hash: ee05039b9c1dc14ccb69c44f1398b878b9c63cd5095cbce2ee9ad4dcca001087
-updated: 2018-01-07T01:16:14.514698534+05:30
+hash: cf9c24f101188b4012674257477cc22bc6d9cd198351c1f613915446eeb4cf82
+updated: 2018-01-09T16:39:43.88623409+05:30
 imports:
 - name: github.com/mitchellh/go-homedir
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
+- name: golang.org/x/crypto
+  version: 0fcca4842a8d74bfddc2c96a073bd2a4d2a7a2e8
+  subpackages:
+  - ssh/terminal
+- name: golang.org/x/sys
+  version: 9a7256cb28ed514b4e1e5f68959914c4c28a92e0
+  subpackages:
+  - unix
+  - windows
 testImports: []

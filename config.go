@@ -73,7 +73,12 @@ func Configure(homeDir string) (config Config, err error) {
 	}
 
 	config.AccountsFolder = dir
-	err = writeToFile(fmt.Sprintf("%s/%s", homeDir, configName), config)
+	data, err := json.Marshal(config)
+	if err != nil {
+		return config, fmt.Errorf("failed to marshall the object: %v", err)
+	}
+
+	err = writeToFile(fmt.Sprintf("%s/%s", homeDir, configName), data)
 	if err != nil {
 		return config, fmt.Errorf("failed to write twothy config file: %v", err)
 	}

@@ -35,7 +35,12 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 		}
 
 		a := NewAccount(args[0], args[1], args[2])
-		err = SaveAccount(c, a)
+		pwd, err := getPassword()
+		if err != nil {
+			return result, fmt.Errorf("failed to get password from user: %v", err)
+		}
+
+		err = SaveAccount(c, a, pwd)
 		if err != nil {
 			return result, fmt.Errorf("failed to save account: %v", err)
 		}
@@ -62,7 +67,12 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 			label = args[1]
 		}
 
-		accounts, err := LoadAccounts(c, name, label)
+		pwd, err := getPassword()
+		if err != nil {
+			return result, fmt.Errorf("failed to get password from user: %v", err)
+		}
+
+		accounts, err := LoadAccounts(c, name, label, pwd)
 		if len(accounts) < 1 {
 			return fmt.Sprintf("No accounts associated with '%s' are found\n", name), nil
 		}

@@ -109,10 +109,20 @@ func CreateOTP(a Account, time int64) (otp int32, err error) {
 }
 
 // SaveAccount writes account info to twothy folder
-func SaveAccount(c Config, a Account) error {
+func SaveAccount(c Config, a Account, pwd []byte) error {
 	fileName := fmt.Sprintf("%s_%s.twothy", a.Name, a.Label)
 	path := fmt.Sprintf("%s%s", c.AccountsFolder, fileName)
-	err := writeToFile(path, a)
+	data, err := json.Marshal(a)
+	if err != nil {
+		return fmt.Errorf("failed to marshall the object: %v", err)
+	}
+
+	ed, err := encrypt(data, pwd)
+	if err != nil {
+		return fmt.Errorf("failed to encrypt account details: %v", err)
+	}
+
+	err = writeToFile(path, []byte(ed))
 	if err != nil {
 		return fmt.Errorf("failed to save account: %v", err)
 	}
@@ -121,10 +131,15 @@ func SaveAccount(c Config, a Account) error {
 }
 
 // loadAccount will load the account from file
-func loadAccount(filePath string) (a Account, err error) {
-	data, err := ioutil.ReadFile(filePath)
+func loadAccount(filePath string, pwd []byte) (a Account, err error) {
+	ed, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return a, fmt.Errorf("failed to read file %s: %v", filePath, err)
+	}
+
+	data, err := decrypt(string(ed), pwd)
+	if err != nil {
+		return a, fmt.Errorf("failed to decrypt the account %s: %v", filePath, err)
 	}
 
 	err = json.Unmarshal(data, &a)
@@ -138,10 +153,10 @@ func loadAccount(filePath string) (a Account, err error) {
 // LoadAccounts will a load accounts matching name and label
 // if label is empty, loads all the accounts matching name
 // if name and label are empty, all th accounts are returned
-func LoadAccounts(c Config, name, label string) (accounts []Account, err error) {
+func LoadAccounts(c Config, name, label string, pwd []byte) (accounts []Account, err error) {
 	if name != "" && label != "" {
 		path := fmt.Sprintf("%s%s_%s.twothy", c.AccountsFolder, name, label)
-		a, err := loadAccount(path)
+		a, err := loadAccount(path, pwd)
 		return []Account{a}, err
 	}
 
@@ -150,7 +165,7 @@ func LoadAccounts(c Config, name, label string) (accounts []Account, err error) 
 			return nil
 		}
 
-		a, err := loadAccount(path)
+		a, err := loadAccount(path, pwd)
 		if err != nil {
 			return fmt.Errorf("failed to read account in %s: %v", path, err)
 		}
