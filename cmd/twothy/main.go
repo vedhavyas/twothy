@@ -24,7 +24,7 @@ func main() {
 		return
 	}
 
-	fmt.Print(result)
+	fmt.Print("\n" + result)
 }
 
 func usage() {

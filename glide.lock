@@ -1,5 +1,5 @@
 hash: cf9c24f101188b4012674257477cc22bc6d9cd198351c1f613915446eeb4cf82
-updated: 2018-01-09T16:39:43.88623409+05:30
+updated: 2018-01-09T16:49:49.099891817+05:30
 imports:
 - name: github.com/mitchellh/go-homedir
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
@@ -8,7 +8,7 @@ imports:
   subpackages:
   - ssh/terminal
 - name: golang.org/x/sys
-  version: 9a7256cb28ed514b4e1e5f68959914c4c28a92e0
+  version: d38bf781f16e180a1b2ad82697d2f81d7b7ecfac
   subpackages:
   - unix
   - windows
