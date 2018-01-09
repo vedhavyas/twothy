@@ -146,22 +146,20 @@ func LoadAccounts(c Config, name, label string) (accounts []Account, err error) 
 	}
 
 	err = filepath.Walk(c.AccountsFolder, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() {
+		if info.IsDir() || filepath.Ext(path) != ".twothy" {
 			return nil
 		}
 
-		if filepath.Ext(path) == ".twothy" {
-			a, err := loadAccount(path)
-			if err != nil {
-				return fmt.Errorf("failed to read account in %s: %v", path, err)
-			}
-
-			if name != "" && strings.ToLower(name) != strings.ToLower(a.Name) {
-				return nil
-			}
-
-			accounts = append(accounts, a)
+		a, err := loadAccount(path)
+		if err != nil {
+			return fmt.Errorf("failed to read account in %s: %v", path, err)
 		}
+
+		if name != "" && strings.ToLower(name) != strings.ToLower(a.Name) {
+			return nil
+		}
+
+		accounts = append(accounts, a)
 		return nil
 	})
 
