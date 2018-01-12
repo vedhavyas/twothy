@@ -25,24 +25,24 @@ const (
 )
 
 // Account represents a single 2fa activated account
-// Name and Label together provides a unique account even for same service.
+// Issuer and Label together provides a unique account even for same service.
 // Ex: google with multiple accounts
 type Account struct {
-	Name     string
-	Label    string
-	T0       int
-	StepTime int
-	Digits   int
-	Key      string
+	Issuer   string `json:"issuer"`
+	Label    string `json:"label"`
+	T0       int    `json:"t_0"`
+	StepTime int    `json:"step_time"`
+	Digits   int    `json:"digits"`
+	Key      string `json:"key"`
 }
 
 // NewAccount returns a new 2fa account with default values
-func NewAccount(name, label, key string) Account {
+func NewAccount(issuer, label, key string) Account {
 	key = strings.Replace(key, "-", "", -1)
 	key = strings.Replace(key, " ", "", -1)
 	key = strings.ToUpper(key)
 	return Account{
-		Name:     name,
+		Issuer:   issuer,
 		Label:    label,
 		T0:       DefaultT0,
 		StepTime: DefaultStepTime,
@@ -116,7 +116,7 @@ func CreateOTP(a Account, time int64) (otp string, err error) {
 
 // SaveAccount writes account info to twothy folder
 func SaveAccount(c Config, a Account, pwd []byte) error {
-	fileName := fmt.Sprintf("%s_%s.twothy", a.Name, a.Label)
+	fileName := fmt.Sprintf("%s_%s.twothy", a.Issuer, a.Label)
 	path := fmt.Sprintf("%s%s", c.AccountsFolder, fileName)
 	data, err := json.Marshal(a)
 	if err != nil {
@@ -156,12 +156,12 @@ func loadAccount(filePath string, pwd []byte) (a Account, err error) {
 	return a, nil
 }
 
-// LoadAccounts will a load accounts matching name and label
-// if label is empty, loads all the accounts matching name
-// if name and label are empty, all th accounts are returned
-func LoadAccounts(c Config, name, label string, pwd []byte) (accounts []Account, err error) {
-	if name != "" && label != "" {
-		path := fmt.Sprintf("%s%s_%s.twothy", c.AccountsFolder, name, label)
+// LoadAccounts will a load accounts matching issuer and label
+// if label is empty, loads all the accounts matching issuer
+// if issuer and label are empty, all th accounts are returned
+func LoadAccounts(c Config, issuer, label string, pwd []byte) (accounts []Account, err error) {
+	if issuer != "" && label != "" {
+		path := fmt.Sprintf("%s%s_%s.twothy", c.AccountsFolder, issuer, label)
 		a, err := loadAccount(path, pwd)
 		return []Account{a}, err
 	}
@@ -176,7 +176,7 @@ func LoadAccounts(c Config, name, label string, pwd []byte) (accounts []Account,
 			return fmt.Errorf("failed to read account in %s: %v", path, err)
 		}
 
-		if name != "" && strings.ToLower(name) != strings.ToLower(a.Name) {
+		if issuer != "" && strings.ToLower(issuer) != strings.ToLower(a.Issuer) {
 			return nil
 		}
 

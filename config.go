@@ -44,7 +44,7 @@ func loadConfig(filePath string) (c Config, err error) {
 func Configure(homeDir string) (config Config, err error) {
 	fmt.Println("Welcome to twothy!!")
 	fmt.Println("Enter the path to store your 2FA accounts.")
-	fmt.Printf("I will create '%s' folder inside the given folder.\n", accountsFolder)
+	fmt.Printf("I will create '%s' folder at the provided path.\n", accountsFolder)
 	fmt.Printf("If you are restoring accounts, provide path to '%s'.\n", accountsFolder)
 
 	reader := bufio.NewReader(os.Stdin)

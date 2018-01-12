@@ -31,7 +31,7 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 		}
 
 		if len(args) < 3 {
-			return result, fmt.Errorf("require Name, Label, and Key(base32) to add an account")
+			return result, fmt.Errorf("require Issuer, Label, and Key(base32) to add an account")
 		}
 
 		a := NewAccount(args[0], args[1], args[2])
@@ -47,10 +47,10 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 
 		otp, err := CreateOTP(a, time.Now().Unix())
 		if err != nil {
-			return result, fmt.Errorf("failed to generate otp for account %s@%s: %v", a.Name, a.Label, err)
+			return result, fmt.Errorf("failed to generate otp for account %s@%s: %v", a.Issuer, a.Label, err)
 		}
 
-		return fmt.Sprintf("%s@%s: %s\n", a.Label, a.Name, otp), nil
+		return fmt.Sprintf("%s@%s: %s\n", a.Label, a.Issuer, otp), nil
 
 	case "otp":
 		c, err := GetConfig()
@@ -81,10 +81,10 @@ func ExecOp(cmd string, args ...string) (result string, err error) {
 		for _, a := range accounts {
 			otp, err := CreateOTP(a, time.Now().Unix())
 			if err != nil {
-				return result, fmt.Errorf("failed to generate otp for account %s@%s: %v", a.Name, a.Label, err)
+				return result, fmt.Errorf("failed to generate otp for account %s@%s: %v", a.Issuer, a.Label, err)
 			}
 
-			b.WriteString(fmt.Sprintf("%s@%s: %s\n", a.Label, a.Name, otp))
+			b.WriteString(fmt.Sprintf("%s@%s: %s\n", a.Label, a.Issuer, otp))
 		}
 
 		return b.String(), nil

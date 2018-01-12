@@ -210,29 +210,29 @@ func Test_loadAccount(t *testing.T) {
 
 func TestLoadAccounts(t *testing.T) {
 	tests := []struct {
-		name           string
+		issuer         string
 		label          string
 		resultAccounts int
 	}{
 		{
-			name:           "test",
+			issuer:         "test",
 			label:          "one",
 			resultAccounts: 1,
 		},
 
 		{
-			name:           "test",
+			issuer:         "test",
 			resultAccounts: 2,
 		},
 
 		{
-			name:           "Google",
+			issuer:         "Google",
 			label:          "dev",
 			resultAccounts: 1,
 		},
 
 		{
-			name:           "Google",
+			issuer:         "Google",
 			label:          "",
 			resultAccounts: 2,
 		},
@@ -245,14 +245,14 @@ func TestLoadAccounts(t *testing.T) {
 	config := Config{AccountsFolder: "./test_folder/"}
 	password := addPadding([]byte("password"), 8)
 	for _, c := range tests {
-		accounts, err := LoadAccounts(config, c.name, c.label, password)
+		accounts, err := LoadAccounts(config, c.issuer, c.label, password)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
 		for _, a := range accounts {
-			if c.name != "" && strings.ToLower(c.name) != strings.ToLower(a.Name) {
-				t.Fatalf("acount name mismatch: %s != %s", c.name, a.Name)
+			if c.issuer != "" && strings.ToLower(c.issuer) != strings.ToLower(a.Issuer) {
+				t.Fatalf("acount issuer mismatch: %s != %s", c.issuer, a.Issuer)
 			}
 
 			if c.label != "" && strings.ToLower(c.label) != strings.ToLower(a.Label) {

@@ -30,12 +30,12 @@ func main() {
 func usage() {
 	fmt.Printf("Usage: %s command [arguments]\n", os.Args[0])
 	fmt.Println("Commands and arguments:")
-	w := tabwriter.NewWriter(os.Stdout, 7, 7, 0, '\t', tabwriter.AlignRight)
+	w := tabwriter.NewWriter(os.Stdout, 8, 8, 0, '\t', tabwriter.AlignRight)
 	fmt.Fprint(w, "\tconfigure:\tconfigures twothy\n")
-	fmt.Fprint(w, "\tadd [name] [label] [key(base32)]:\tadds a new account with given info\n")
+	fmt.Fprint(w, "\tadd [issuer] [label] [key(base32)]:\tadds a new account with given info\n")
 	fmt.Fprint(w, "\totp:\tgenerates otp for all accounts\n")
-	fmt.Fprint(w, "\totp [name]:\tgenerates otp for accounts matching name\n")
-	fmt.Fprint(w, "\totp [name] [label]:\tgenerates otp for accounts matching name and label\n")
+	fmt.Fprint(w, "\totp [issuer]:\tgenerates otp for accounts provided by the issuer\n")
+	fmt.Fprint(w, "\totp [issuer] [label]:\tgenerates otp for accounts provided by the issuer and matching label\n")
 	w.Flush()
 	os.Exit(1)
 }
