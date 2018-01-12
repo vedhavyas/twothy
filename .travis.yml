@@ -1,0 +1,11 @@
+language: go
+go:
+ - 1.9
+
+install:
+ - make install
+
+script:
+ - make lint
+ - make test
+ - make package OS="linux"
