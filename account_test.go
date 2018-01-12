@@ -226,13 +226,13 @@ func TestLoadAccounts(t *testing.T) {
 		},
 
 		{
-			issuer:         "Google",
+			issuer:         "google",
 			label:          "dev",
 			resultAccounts: 1,
 		},
 
 		{
-			issuer:         "Google",
+			issuer:         "google",
 			label:          "",
 			resultAccounts: 2,
 		},
