@@ -1,10 +1,10 @@
 package twothy
 
 import (
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"io"
@@ -12,8 +12,11 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-// passwordPad to add extra bytes
-const passwordPad = byte('=')
+// hashOf will return a 256-bit hash of pwd
+func hashOf(pwd []byte) []byte {
+	h := sha256.Sum256(pwd)
+	return h[:]
+}
 
 // getPassword returns the password taken from the user
 func getPassword(hint string) ([]byte, error) {
@@ -23,29 +26,11 @@ func getPassword(hint string) ([]byte, error) {
 		return nil, fmt.Errorf("failed to read user's password: %v", err)
 	}
 
-	return validatePassword(password)
-}
-
-// addPadding repeat adds the passwordPad to pwd
-func addPadding(pwd []byte, repeat int) []byte {
-	pad := []byte{passwordPad}
-	pad = bytes.Repeat(pad, repeat)
-	return append(pwd, pad...)
-}
-
-// validatePassword ensures password is either 16, 24, 32 bytes long
-func validatePassword(pwd []byte) ([]byte, error) {
-	l := len(pwd)
-	switch {
-	case l <= 16:
-		return addPadding(pwd, 16-l), nil
-	case l <= 24:
-		return addPadding(pwd, 24-l), nil
-	case l <= 32:
-		return addPadding(pwd, 32-l), nil
-	default:
-		return nil, fmt.Errorf("password should be <=32 characters: %d", len(pwd))
+	if len(password) < 1 {
+		return nil, fmt.Errorf("password cannot be empty")
 	}
+
+	return hashOf(password), nil
 }
 
 // encrypt encrypts the message with AES
