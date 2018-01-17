@@ -182,7 +182,7 @@ func TestSaveAccount(t *testing.T) {
 		},
 	}
 
-	password := addPadding([]byte("password"), 8)
+	password := hashOf([]byte("password"))
 	for _, c := range tests {
 		a := NewAccount(c.name, c.label, c.key)
 		c := Config{AccountsFolder: "./test_folder/"}
@@ -196,7 +196,7 @@ func TestSaveAccount(t *testing.T) {
 }
 
 func Test_loadAccount(t *testing.T) {
-	password := addPadding([]byte("password"), 8)
+	password := hashOf([]byte("password"))
 	a, err := loadAccount("./test_folder/test_one.twothy", password)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -243,7 +243,7 @@ func TestLoadAccounts(t *testing.T) {
 	}
 
 	config := Config{AccountsFolder: "./test_folder/"}
-	password := addPadding([]byte("password"), 8)
+	password := hashOf([]byte("password"))
 	for _, c := range tests {
 		accounts, err := LoadAccounts(config, c.issuer, c.label, password)
 		if err != nil {
