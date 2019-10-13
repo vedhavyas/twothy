@@ -1,0 +1,6 @@
+github.com/mitchellh/go-homedir v0.0.0-20161203194507-b8bc1bf76747 h1:eQox4Rh4ewJF+mqYPxCkmBAirRnPaHEB26UkNuPyjlk=
+github.com/mitchellh/go-homedir v0.0.0-20161203194507-b8bc1bf76747/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
+golang.org/x/crypto v0.0.0-20171231215028-0fcca4842a8d h1:GrqEEc3+MtHKTsZrdIGVoYDgLpbSRzW1EF+nLu0PcHE=
+golang.org/x/crypto v0.0.0-20171231215028-0fcca4842a8d/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
+golang.org/x/sys v0.0.0-20180109000653-d38bf781f16e h1:ExxkMaZ1zZCYLok3+2f3EQwDr4TtJ/HjSmxBIvjDzes=
+golang.org/x/sys v0.0.0-20180109000653-d38bf781f16e/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
