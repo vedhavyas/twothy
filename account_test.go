@@ -137,18 +137,23 @@ func TestCreateOTP(t *testing.T) {
 			time: 1515234317,
 			otp:  "214658",
 		},
+
+		{
+			key:  "x27q3cih7sb4lvyuvisl4zwvwa",
+			time: 1570974377,
+			otp:  "949095",
+		},
 	}
 
-	a := NewAccount("Test", "account", "")
 	for _, c := range tests {
-		a.Key = c.key
+		a := NewAccount("Test", "account", c.key)
 		otp, err := CreateOTP(a, c.time)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
 		if c.otp != otp {
-			t.Fatalf("expected %d but got %d", c.otp, otp)
+			t.Fatalf("expected %s but got %s", c.otp, otp)
 		}
 	}
 }

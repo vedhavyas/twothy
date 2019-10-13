@@ -41,6 +41,9 @@ func NewAccount(issuer, label, key string) Account {
 	key = strings.Replace(key, "-", "", -1)
 	key = strings.Replace(key, " ", "", -1)
 	key = strings.ToUpper(key)
+	for len(key)%8 != 0 {
+		key = key + "="
+	}
 	return Account{
 		Issuer:   issuer,
 		Label:    label,
