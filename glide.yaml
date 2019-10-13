@@ -1,6 +1,0 @@
-package: github.com/vedhavyas/twothy
-import:
-- package: github.com/mitchellh/go-homedir
-- package: golang.org/x/crypto
-  subpackages:
-  - ssh/terminal
